@@ -1,0 +1,25 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:plone="http://namespaces.plone.org/plone">
+
+  <include package="plone.restapi"  />
+
+  <plone:service
+    method="GET"
+    name="@editing.progress"
+    for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+    factory=".get.EditingProgress"
+    permission="cmf.ModifyPortalContent"
+    />
+
+  <plone:service
+    method="GET"
+    name="@editing.progress"
+    for="Products.CMFCore.interfaces.IContentish"
+    factory=".get.EditingProgressGet"
+    permission="cmf.ModifyPortalContent"
+    />
+
+   <adapter factory=".get.EditingProgress" name="editing.progress" />
+
+</configure>
