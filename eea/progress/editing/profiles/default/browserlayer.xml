@@ -2,6 +2,6 @@
 <layers>
   <layer
       name="eea.progress.editing"
-      interface="eea.progress.editing.interfaces.IEeaProgressEditingLayer"
+      interface="eea.progress.editing.interfaces.IEEAProgressEditingLayer"
       />
 </layers>
