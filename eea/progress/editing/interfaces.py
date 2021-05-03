@@ -14,16 +14,16 @@ class IBaseObject(Interface):
     """
 
 
-class IEEAProgressEditingLayer(IDefaultBrowserLayer):
+class IEEAEditingProgressLayer(IDefaultBrowserLayer):
     """Marker interface that defines a browser layer."""
 
 
-class IProgressEditing(Interface):
+class IEditingProgress(Interface):
     """ Marker interface for editing
     """
 
 
-class IProgressEditingState(Interface):
+class IEditingProgressState(Interface):
     """ Marker interface for editing state
     """
 

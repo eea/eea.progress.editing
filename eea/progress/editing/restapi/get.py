@@ -8,7 +8,7 @@ from Products.CMFPlone.interfaces import IPloneSiteRoot
 from zope.component import adapter, queryAdapter
 from zope.interface import implementer
 from zope.interface import Interface
-from eea.progress.editing.interfaces import IProgressEditing
+from eea.progress.editing.interfaces import IEditingProgress
 
 
 @implementer(IExpandableElement)
@@ -30,12 +30,10 @@ class EditingProgress(object):
         if IPloneSiteRoot.providedBy(self.context):
             return result
 
-        progress = queryAdapter(self.context, IProgressEditing)
+        progress = queryAdapter(self.context, IEditingProgress)
         if progress:
             result["editing.progress"]['steps'] = json_compatible(
                 progress.steps)
-            result["editing.progress"]['done'] = json_compatible(
-                progress.done)
         return result
 
 

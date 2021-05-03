@@ -1,0 +1,21 @@
+<configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:zcml="http://namespaces.zope.org/zcml"
+  i18n_domain="eea">
+
+
+  <class class="plone.dexterity.content.DexterityContent">
+    <implements interface="eea.progress.editing.interfaces.IBaseObject" />
+  </class>
+
+  <class class="Products.Archetypes.BaseObject.BaseObject" zcml:condition="installed Products.Archetypes">
+    <implements interface="eea.progress.editing.interfaces.IBaseObject" />
+  </class>
+
+  <adapter
+    for="eea.progress.editing.interfaces.IBaseObject"
+    provides="eea.progress.editing.interfaces.IEditingProgress"
+    factory=".adapters.EditingProgress"
+    />
+
+</configure>

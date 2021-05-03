@@ -8,6 +8,7 @@
   <include file="profiles.zcml" />
 
   <include package=".browser" />
+  <include package=".api" />
   <include package=".restapi" />
   <include package=".upgrades" />
 
