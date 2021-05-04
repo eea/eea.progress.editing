@@ -19,13 +19,16 @@ class EditingProgress(object):
 
     @property
     def steps(self):
-        """Return a SimpleVocabulary like tuple with progress fields info:
+        """Return a SimpleVocabulary like tuple with progress fields as dicts:
 
         (
-          ('Boolean if field ready or not',
-          'Field icon if valid or invalid', 'Message of progress field',
-          'Field href to edit', 'Field href text'
-          )
+          {
+          'is_ready': 'Boolean if field ready or not',
+           'label': 'Message of progress field'
+           'icon': 'Field icon if valid or invalid'
+           'link': 'Field href to edit',
+           'link_label': 'Field href message'
+           }
         )
 
         """
@@ -38,18 +41,18 @@ class EditingProgress(object):
             widgets_views = list(mview.schema())
             for wview in widgets_views:
                 is_ready = True if wview.ready() else False
+                field_dict = {'is_ready': is_ready}
                 if is_ready:
-                    label = wview.get('labelReady')
-                    icon = wview.get('iconReady')
-                    link = ''
-                    link_label = ''
+                    field_dict['label'] = wview.get('labelReady')
+                    field_dict['icon'] = wview.get('iconReady')
+                    field_dict['link'] = ''
+                    field_dict['link_label'] = ''
                 else:
-                    label = wview.get('labelEmpty')
-                    icon = wview.get('iconEmpty')
-                    link = wview.ctx_url + wview.get('link')
-                    link_label = wview.get('linkLabel')
-                self._steps.append([is_ready, label, icon, link,
-                                    link_label])
+                    field_dict['label'] = wview.get('labelEmpty')
+                    field_dict['icon'] = wview.get('iconEmpty')
+                    field_dict['link'] = wview.ctx_url + wview.get('link')
+                    field_dict['link_label'] = wview.get('linkLabel')
+                self._steps.append(field_dict)
             self._done = mview.progress
 
         return self._steps
@@ -58,4 +61,3 @@ class EditingProgress(object):
     def done(self):
         """Done"""
         return self._done
-
