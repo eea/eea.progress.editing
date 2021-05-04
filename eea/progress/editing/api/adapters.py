@@ -23,7 +23,7 @@ class EditingProgress(object):
 
         (
           {
-          'is_ready': 'Boolean if field ready or not',
+           'is_ready': 'Boolean if field ready or not',
            'label': 'Message of progress field'
            'icon': 'Field icon if valid or invalid'
            'link': 'Field href to edit',
