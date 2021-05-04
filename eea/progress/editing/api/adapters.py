@@ -22,7 +22,7 @@ class EditingProgress(object):
         """Return a SimpleVocabulary like tuple with progress fields info:
 
         (
-          ('Boolean if field hidden or not','Boolean if field ready or not',
+          ('Boolean if field ready or not',
           'Field icon if valid or invalid', 'Message of progress field',
           'Field href to edit', 'Field href text'
           )
@@ -37,7 +37,6 @@ class EditingProgress(object):
         if mview:
             widgets_views = list(mview.schema())
             for wview in widgets_views:
-                is_hidden = wview.hidden
                 is_ready = True if wview.ready() else False
                 if is_ready:
                     label = wview.get('labelReady')
@@ -49,7 +48,7 @@ class EditingProgress(object):
                     icon = wview.get('iconEmpty')
                     link = wview.ctx_url + wview.get('link')
                     link_label = wview.get('linkLabel')
-                self._steps.append([is_hidden, is_ready, label, icon, link,
+                self._steps.append([is_ready, label, icon, link,
                                     link_label])
             self._done = mview.progress
 
