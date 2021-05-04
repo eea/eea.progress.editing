@@ -34,6 +34,8 @@ class EditingProgress(object):
         if progress:
             result["editing.progress"]['steps'] = json_compatible(
                 progress.steps)
+        result["editing.progress"]['done'] = json_compatible(
+            progress.done)
         return result
 
 

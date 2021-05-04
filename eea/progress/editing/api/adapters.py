@@ -15,6 +15,7 @@ class EditingProgress(object):
     def __init__(self, context):
         self.context = context
         self._steps = None
+        self._done = 0
 
     @property
     def steps(self):
@@ -23,7 +24,8 @@ class EditingProgress(object):
         (
           ('Boolean if field hidden or not','Boolean if field ready or not',
           'Field icon if valid or invalid', 'Message of progress field',
-          'Field href to edit', 'Field href text'),
+          'Field href to edit', 'Field href text'
+          )
         )
 
         """
@@ -49,5 +51,12 @@ class EditingProgress(object):
                     link_label = wview.get('linkLabel')
                 self._steps.append([is_hidden, is_ready, label, icon, link,
                                     link_label])
+            self._done = mview.progress
 
         return self._steps
+
+    @property
+    def done(self):
+        """Done"""
+        return self._done
+
