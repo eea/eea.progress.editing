@@ -16,7 +16,6 @@ class EditingProgress(object):
         self.context = context
         self._steps = None
 
-
     @property
     def steps(self):
         """Return a SimpleVocabulary like tuple with progress fields info:
