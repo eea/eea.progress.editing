@@ -2,14 +2,15 @@ Changelog
 =========
 
 1.1 - (2021-05-04)
----------------------------
-* Change: Refs #124588 return field info as dict 
+------------------
+* Change: Refs #124588 return field info as dict
   [ichim-david]
-- Change: We now export a list of dicts for each field instead of
+* Change: We now export a list of dicts for each field instead of
   a list of lists, making it easier to read and understand what is exported
   [ichim-david refs #124588]
-- Provide done information for editing progress of fields
+* Provide done information for editing progress of fields
   [ichim-david refs #124588]
 
 1.0 - (2021-05-04)
 ------------------
+* Initial Release
