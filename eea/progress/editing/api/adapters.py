@@ -15,7 +15,7 @@ class EditingProgress(object):
     def __init__(self, context):
         self.context = context
         self._steps = None
-        self._done = 0
+        self._done = 100
 
     @property
     def steps(self):
@@ -53,6 +53,10 @@ class EditingProgress(object):
                     field_dict['link'] = wview.ctx_url + wview.get('link')
                     field_dict['link_label'] = wview.get('linkLabel')
                 self._steps.append(field_dict)
+            # progressbar/browser/app/view.py#L155
+            # progress is set correctly only after call to schema() from
+            # progress.metadata browserview otherwise we get the 100 fallback
+            # as such we set the done value here instead of within the property
             self._done = mview.progress
 
         return self._steps
