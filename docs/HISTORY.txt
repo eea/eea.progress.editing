@@ -1,6 +1,9 @@
 Changelog
 =========
 
+1.3-dev0 - (unreleased)
+---------------------------
+
 1.2 - (2021-06-10)
 ---------------------------
 * Change: add also workflow states info to rest api, this
