@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.2 - (2021-06-10)
+---------------------------
+* Change: add also workflow states info to rest api, this
+  way we know for which state the field should be required
+  [ichim-david refs #124587]
+
 1.1 - (2021-05-04)
 ------------------
 * Change: return field info as dict

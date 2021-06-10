@@ -41,7 +41,8 @@ class EditingProgress(object):
             widgets_views = list(mview.schema())
             for wview in widgets_views:
                 is_ready = True if wview.ready() else False
-                field_dict = {'is_ready': is_ready}
+                field_dict = {'is_ready': is_ready,
+                              'states': wview.get('states')}
                 if is_ready:
                     field_dict['label'] = wview.get('labelReady')
                     field_dict['icon'] = wview.get('iconReady')
