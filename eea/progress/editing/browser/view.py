@@ -2,19 +2,17 @@
 """
 
 from Products.Five.browser import BrowserView
+from Products.CMFCore.utils import getToolByName
+
 from zope.component import queryMultiAdapter, queryUtility
+from plone.memoize.view import memoize
 
 from eea.progressbar.interfaces import IProgressTool
-from Products.Five.browser import BrowserView
-from Products.CMFCore.utils import getToolByName
-from plone.memoize.view import memoize
 
 
 class EditingProgressView(BrowserView):
     """ Editing progress
     """
-    def __init__(self, context, request):
-        super(EditingProgressView, self).__init__(context, request)
 
     @memoize
     def state_is_ready(self):
