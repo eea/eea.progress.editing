@@ -7,7 +7,13 @@ from Products.CMFCore.utils import getToolByName
 from zope.component import queryMultiAdapter, queryUtility
 from plone.memoize.view import memoize
 
-from eea.progressbar.interfaces import IProgressTool
+try:
+    from eea.progressbar.interfaces import IProgressTool
+except ImportError:
+    from zope.interface import Interface
+    class IProgressTool(Interface):
+        """ Fallback """
+        pass
 
 
 class EditingProgressView(BrowserView):
@@ -20,7 +26,7 @@ class EditingProgressView(BrowserView):
         """
 
         tool = queryUtility(IProgressTool)
-        ctype = getattr(self.context, 'portal_type', '')
+        ctype = getattr(self.context, 'portal_type', {})
         ctype = tool.get(ctype)
         if not ctype:
             return True
