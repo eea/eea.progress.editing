@@ -3,4 +3,13 @@
   xmlns:browser="http://namespaces.zope.org/browser"
   i18n_domain="eea">
 
+  <browser:page
+    name="editing.progress.status"
+    layer="eea.progress.editing.interfaces.IEEAEditingProgressLayer"
+    for="*"
+    class=".view.EditingProgressView"
+    permission="zope2.View"
+    allowed_attributes="state_is_ready"
+  />
+
 </configure>
