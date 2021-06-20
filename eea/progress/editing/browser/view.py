@@ -10,8 +10,7 @@ from plone.memoize.view import memoize
 try:
     from eea.progressbar.interfaces import IProgressTool
 except ImportError:
-    from zope.interface import Interface
-    class IProgressTool(Interface):
+    class IProgressTool(object):
         """ Fallback """
         pass
 
