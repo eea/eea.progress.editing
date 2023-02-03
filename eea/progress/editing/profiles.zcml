@@ -2,6 +2,7 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     xmlns:five="http://namespaces.zope.org/five"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
     i18n_domain="eea">
 
   <five:registerPackage package="." initialize=".initialize" />
@@ -22,6 +23,16 @@
       description="Uninstalls the eea.progress.editing add-on."
       provides="Products.GenericSetup.interfaces.EXTENSION"
       post_handler=".setuphandlers.uninstall"
+      />
+
+  <genericsetup:registerProfile
+      zcml:condition="have plone-6"
+      name="plone6"
+      title="eea.progress.editing"
+      directory="profiles/plone6"
+      description="Installs the eea.progress.editing add-on."
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      post_handler=".setuphandlers.post_install"
       />
 
   <utility
