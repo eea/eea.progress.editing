@@ -31,3 +31,7 @@ class IEditingProgressState(Interface):
 #
 # Adapters
 #
+
+# add controlpanel entry with json editing progress taken from https://www.eea.europa.eu/portal_progress/ims-indicator
+# have adapter compare progress with new cpanel entry.
+# have restapi send progress from registry/adapter and then the Plone4 fallback
