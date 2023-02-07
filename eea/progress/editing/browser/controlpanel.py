@@ -10,7 +10,7 @@ from zope.component import adapter
 from zope.interface import Interface
 
 try:
-    from plone.schema import Dict
+    from plone.schema import Dict, JSONField
 except ImportError:
     from zope.schema import Dict
 
@@ -19,7 +19,7 @@ logger = logging.getLogger("eea.progress.editing")
 
 
 class IEditingProgressSettings(Interface):
-    progress = Dict(
+    progress = JSONField(
         title="Progress",
         description="Editing progress configuration",
         required=False,
