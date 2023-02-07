@@ -2,7 +2,7 @@
 <object name="portal_controlpanel">
   <configlet
       title="Editing Progress Settings"
-      action_id="editingprogress-controlpanel"
+      action_id="eea.progress.editing.browser.controlpanel.IEditingProgressSettings"
       appId="editingprogress-controlpanel"
       category="Products"
       condition_expr=""

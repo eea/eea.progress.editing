@@ -3,7 +3,6 @@
 import json
 import logging
 
-from plone import schema
 from plone.app.registry.browser.controlpanel import ControlPanelFormWrapper
 from plone.app.registry.browser.controlpanel import RegistryEditForm
 from plone.restapi.controlpanels import RegistryConfigletPanel
@@ -11,24 +10,19 @@ from zope.component import adapter
 from zope.interface import Interface
 
 try:
-    from plone.schema import JSONField
+    from plone.schema import Dict
 except ImportError:
-    pass
+    from zope.schema import Dict
 
 
 logger = logging.getLogger("eea.progress.editing")
 
-VOCABULARY_SCHEMA = json.dumps(
-    {}
-)
-
 
 class IEditingProgressSettings(Interface):
-    progress = schema.JSONField(
+    progress = Dict(
         title="Progress",
         description="Editing progress configuration",
         required=False,
-        schema=VOCABULARY_SCHEMA,
         default={},
         missing_value={},
     )
