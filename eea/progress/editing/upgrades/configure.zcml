@@ -17,10 +17,10 @@
   </genericsetup:upgradeSteps>
 
   <genericsetup:upgradeSteps
-    zcml:condition="have plone-6"
+    zcml:condition="have plone-60"
     source="1.0"
     destination="1.5"
-    profile="eea.progress.editing:plone6">
+    profile="eea.progress.editing:default">
 
     <genericsetup:upgradeDepends
        title="Import all steps from eea.progress.editing Plone 6 profile"

@@ -14,7 +14,7 @@
   />
 
   <browser:page
-      zcml:condition="have plone-6"
+      zcml:condition="have plone-60"
       name="editingprogress-controlpanel"
       for="Products.CMFPlone.interfaces.IPloneSiteRoot"
       class=".controlpanel.EditingProgressControlPanelFormWrapper"
@@ -23,7 +23,7 @@
       />
 
   <adapter
-      zcml:condition="have plone-6"
+      zcml:condition="have plone-60"
       factory="eea.progress.editing.browser.controlpanel.EditingProgressRegistryConfigletPanel"
       name="editingprogress-controlpanel" />
 
