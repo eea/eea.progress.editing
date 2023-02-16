@@ -38,27 +38,6 @@ class EditingProgress(object):
             progress.done)
         return result
 
-# progress.steps =
-# [
-#  {'icon': u'eea-icon eea-icon-edit',
-#   'is_ready': False,
-#   'label': u'Please set the PDF cover main image of this Article',
-#   'link': u'http://10.110.30.235:55427/www/SITE/sandbox/petchesi-iulian-eau-de-web/test/edit#fieldsetlegend-default',
-#   'link_label': u'Add PDF cover main image',
-#   'states': [u'all']},
-#  {'icon': u'eea-icon eea-icon-edit',
-#   'is_ready': False,
-#   'label': u'Please set the Exclude from Table of Contents of this Article',
-#   'link': u'http://10.110.30.235:55427/www/SITE/sandbox/petchesi-iulian-eau-de-web/test/edit#fieldsetlegend-default',
-#   'link_label': u'Add Exclude from Table of Contents',
-#   'states': [u'all']},
-#  {'icon': u'eea-icon eea-icon-check',
-#   'is_ready': True,
-#   'label': u'You added the Table of contents depth level',
-#   'link': '',
-#   'link_label': '',
-#   'states': [u'all']}]
-
 
 class EditingProgressGet(Service):
     """Get editing progress information"""

@@ -45,31 +45,11 @@ class EditingProgress(object):
             return self._steps
 
         self._steps = []
-        # (Pdb) mview.__class__
-        # <class 'Products.Five.metaclass.SimpleViewClass from /plone/instance/src/eea.progressbar/eea/progressbar/browser/zpt/metadata.pt'>
         mview = self.context.restrictedTraverse('@@progress.metadata', None)
         if mview:
             # Plone 4
             widgets_views = list(mview.schema())
             for wview in widgets_views:
-                # (Pdb) pp vars(wview)
-                # {'_condition': 'Test',
-                # '_custom': None,
-                # '_hidden': False,
-                # '_ready': 'Test',
-                # '_workflow': [<zope.schema.vocabulary.SimpleTerm object at 0x7f8f16a68310>],
-                # 'context': <Article at /www/portal_progress/article/.schema>,
-                # 'ctx_url': 'http://10.110.30.235:55427/www/SITE/sandbox/petchesi-iulian-eau-de-web/test/',
-                # 'field': <Field title(string:rw)>,
-                # 'label': 'Title',
-                # 'parent': <ProgressContentType at /www/portal_progress/article>,
-                # 'prefix': 'title',
-                # 'request': <HTTPRequest, URL=http://10.110.30.235:55427/www/SITE/sandbox/petchesi-iulian-eau-de-web/test/@editing.progress>}
-
-                # (Pdb) wview.ready.__code__
-                # <code object ready at 0x7f8f3b582830, file "/plone/instance/src/eea.progressbar/eea/progressbar/widgets/simple/view.py", line 55>
-
-
                 is_ready = True if wview.ready() else False
                 field_dict = {'is_ready': is_ready,
                               'states': wview.get('states')}
@@ -96,8 +76,6 @@ class EditingProgress(object):
             ptype_record = registry_record.get(ptype, [])
 
             for record in ptype_record:
-                import pdb;pdb.set_trace()
-
                 is_ready = True if self.condition(record) else False
                 field_dict = {'is_ready': is_ready,
                               'states': record.get('states')}
