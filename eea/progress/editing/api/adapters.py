@@ -102,7 +102,7 @@ class EditingProgress(object):
         expr = record.get('_condition')
         field = get_field_by_name(record.get('prefix'), context)
         value = (field.get(context) if field else getattr(context,
-         record.get('prefix'), None))
+                 record.get('prefix'), None))  # noqa
         engine = TrustedEngine
         zopeContext = TrustedZopeContext(engine, {
             'context': context,
@@ -119,7 +119,7 @@ class EditingProgress(object):
             result = False
 
         if callable(result) and not isinstance(result,
-                    ImplicitAcquisitionWrapper):
+            ImplicitAcquisitionWrapper):  # noqa
             result = result()
 
         return result
