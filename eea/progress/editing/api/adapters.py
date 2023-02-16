@@ -1,8 +1,16 @@
 """ Progress adapters
 """
+from logging import getLogger
 from plone import api
+
+from Acquisition import ImplicitAcquisitionWrapper
 from eea.progress.editing.interfaces import IEditingProgress
+from plone.restapi.services.sources.get import get_field_by_name
 from zope.interface import implementer
+from zope.pagetemplate.engine import TrustedEngine, TrustedZopeContext
+
+
+logger = getLogger("eea.progress.editing")
 
 
 @implementer(IEditingProgress)
@@ -88,12 +96,54 @@ class EditingProgress(object):
             ptype_record = registry_record.get(ptype, [])
 
             for record in ptype_record:
-                pass
-                # check and compare record to the context
-                # return results
+                import pdb;pdb.set_trace()
 
+                is_ready = True if self.condition(record) else False
+                field_dict = {'is_ready': is_ready,
+                              'states': record.get('states')}
 
+                if is_ready:
+                    field_dict['label'] = record.get('labelReady')
+                    field_dict['icon'] = record.get('iconReady')
+                    field_dict['link'] = ''
+                    field_dict['link_label'] = ''
+                else:
+                    field_dict['label'] = record.get('labelEmpty')
+                    field_dict['icon'] = record.get('iconEmpty')
+                    field_dict['link'] = record['ctx_url'] + record.get('link')
+                    field_dict['link_label'] = record.get('linkLabel')
+
+                self._steps.append(field_dict)
+                # custom method for done/progress
         return self._steps
+
+    def condition(self, record):
+        """ condition custom method """
+        context = self.context
+        expr = record.get('_condition')
+        field = get_field_by_name(record.get('prefix'), context)
+        value = (field.get(context) if field
+                    else getattr(context, record.get('prefix'), None))
+        engine = TrustedEngine
+        zopeContext = TrustedZopeContext(engine, {
+            'context': context,
+            'request': self.context.REQUEST,
+            'field': field,
+            'value': value
+        })
+        expression = engine.compile(expr)
+
+        try:
+            result = zopeContext.evaluate(expression)
+        except Exception as err:
+            logger.exception(err)
+            result = False
+
+        if callable(result) and \
+            not isinstance(result, ImplicitAcquisitionWrapper):
+            result = result()
+
+        return result
 
     @property
     def done(self):
