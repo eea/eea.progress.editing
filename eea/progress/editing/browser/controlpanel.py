@@ -1,3 +1,4 @@
+# pylint: disable = C0412
 """ Editing progress controlpanel Plone 6
 """
 import logging

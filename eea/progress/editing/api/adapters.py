@@ -1,7 +1,8 @@
+# pylint: disable = C0412
 """ Progress adapters
 """
 from logging import getLogger
-from plone import api
+from plone.api import portal
 
 from Acquisition import ImplicitAcquisitionWrapper
 from eea.progress.editing.interfaces import IEditingProgress
@@ -71,7 +72,7 @@ class EditingProgress(object):
             self._done = mview.progress
         else:
             # Plone 6
-            registry_record = api.portal.get_registry_record('editing.progress')
+            registry_record = portal.get_registry_record('editing.progress')
             ptype = self.context.portal_type
             ptype_record = registry_record.get(ptype, [])
 
@@ -101,7 +102,7 @@ class EditingProgress(object):
         expr = record.get('_condition')
         field = get_field_by_name(record.get('prefix'), context)
         value = (field.get(context) if field
-                    else getattr(context, record.get('prefix'), None))
+                else getattr(context, record.get('prefix'), None))
         engine = TrustedEngine
         zopeContext = TrustedZopeContext(engine, {
             'context': context,
@@ -117,8 +118,8 @@ class EditingProgress(object):
             logger.exception(err)
             result = False
 
-        if callable(result) and \
-            not isinstance(result, ImplicitAcquisitionWrapper):
+        if callable(result) and not isinstance(result,
+                ImplicitAcquisitionWrapper):
             result = result()
 
         return result
