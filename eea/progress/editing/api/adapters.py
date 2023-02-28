@@ -9,6 +9,7 @@ from eea.progress.editing.interfaces import IEditingProgress
 from plone.restapi.services.sources.get import get_field_by_name
 from zope.interface import implementer
 from zope.pagetemplate.engine import TrustedEngine, TrustedZopeContext
+from zope.tales.pythonexpr import PythonExpr
 
 
 logger = getLogger("eea.progress.editing")
@@ -110,7 +111,7 @@ class EditingProgress(object):
             'field': field,
             'value': value
         })
-        expression = engine.compile(expr)
+        expression = PythonExpr('title', expr, engine)
 
         try:
             result = zopeContext.evaluate(expression)
