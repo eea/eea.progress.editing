@@ -111,7 +111,7 @@ class EditingProgress(object):
             'field': field,
             'value': value
         })
-        expression = PythonExpr('title', expr, engine)
+        expression = PythonExpr(field, expr, engine)
 
         try:
             result = zopeContext.evaluate(expression)
