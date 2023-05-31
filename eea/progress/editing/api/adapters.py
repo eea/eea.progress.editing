@@ -9,7 +9,6 @@ from eea.progress.editing.interfaces import IEditingProgress
 from plone.restapi.services.sources.get import get_field_by_name
 from zope.interface import implementer
 from zope.pagetemplate.engine import TrustedEngine, TrustedZopeContext
-from zope.tales.pythonexpr import PythonExpr
 
 
 logger = getLogger("eea.progress.editing")
@@ -80,27 +79,45 @@ class EditingProgress(object):
             for record in ptype_record:
                 is_ready = True if self.condition(record) else False
                 field_dict = {'is_ready': is_ready,
-                              'states': record.get('states')}
+                              'states': self.get(record, 'states')}
 
                 if is_ready:
-                    field_dict['label'] = record.get('labelReady')
-                    field_dict['icon'] = record.get('iconReady')
+                    field_dict['label'] = self.get(record, 'labelReady')
+                    field_dict['icon'] = self.get(record, 'iconReady')
                     field_dict['link'] = ''
                     field_dict['link_label'] = ''
                 else:
-                    field_dict['label'] = record.get('labelEmpty')
-                    field_dict['icon'] = record.get('iconEmpty')
-                    field_dict['link'] = record['ctx_url'] + record.get('link')
-                    field_dict['link_label'] = record.get('linkLabel')
+                    field_dict['label'] = self.get(record, 'labelEmpty')
+                    field_dict['icon'] = self.get(record, 'iconEmpty')
+                    field_dict['link'] = "%s/%s" % (
+                        self.context.absolute_url(),
+                        self.get(record, 'link')
+                    )
+                    field_dict['link_label'] = self.get(record, 'linkLabel')
 
                 self._steps.append(field_dict)
                 # custom method for done/progress
         return self._steps
 
+    def get(self, record, name, default=''):
+        value = record.get(name, default)
+        if isinstance(value, str):
+            prefix = record.get('prefix')
+            field = get_field_by_name(prefix, self.context)
+            label = getattr(field, 'title', prefix)
+            widget = getattr(field, 'widget', None)
+            value = value.format(
+                label=label,
+                field=field,
+                context=self.context,
+                widget=widget
+            )
+        return value
+
     def condition(self, record):
         """ condition custom method """
         context = self.context
-        expr = record.get('_condition')
+        condition = record.get('condition')
         field = get_field_by_name(record.get('prefix'), context)
         value = (field.get(context) if field else getattr(context,
                  record.get('prefix'), None))  # noqa
@@ -111,9 +128,9 @@ class EditingProgress(object):
             'field': field,
             'value': value
         })
-        expression = PythonExpr(field, expr, engine)
 
         try:
+            expression = engine.compile(condition)
             result = zopeContext.evaluate(expression)
         except Exception as err:
             logger.exception(err)
