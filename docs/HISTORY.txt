@@ -1,6 +1,9 @@
 Changelog
 =========
 
+2.1-dev0 - (unreleased)
+---------------------------
+
 2.0 - (2024-06-01)
 ---------------------------
 * Breaking: Drop Plone 4 GenericSetup profile
