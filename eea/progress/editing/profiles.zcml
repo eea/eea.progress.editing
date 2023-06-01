@@ -25,20 +25,9 @@
       post_handler=".setuphandlers.uninstall"
       />
 
-  <genericsetup:registerProfile
-      zcml:condition="have plone-60"
-      name="plone6"
-      title="eea.progress.editing"
-      directory="profiles/plone6"
-      description="Installs the eea.progress.editing add-on."
-      provides="Products.GenericSetup.interfaces.EXTENSION"
-      post_handler=".setuphandlers.post_install"
-      />
-
   <utility
       factory=".setuphandlers.HiddenProfiles"
       name="eea.progress.editing-hiddenprofiles"
       />
-
 
 </configure>

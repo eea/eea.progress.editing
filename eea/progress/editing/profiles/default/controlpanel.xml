@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<object name="portal_controlpanel">
+  <configlet
+      title="Editing Progress"
+      action_id="eea.progress.editing"
+      appId="eea.progress.editing"
+      category="Products"
+      condition_expr=""
+      icon_expr=""
+
+      url_expr="string:${portal_url}/@@progress.editing.controlpanel"
+
+      visible="True">
+    <permission>Manage portal</permission>
+  </configlet>
+</object>

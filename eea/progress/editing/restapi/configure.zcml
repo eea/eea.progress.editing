@@ -22,4 +22,8 @@
 
    <adapter factory=".get.EditingProgress" name="editing.progress" />
 
+  <adapter
+    factory=".controlpanel.Controlpanel"
+    name="progress.editing" />
+
 </configure>
