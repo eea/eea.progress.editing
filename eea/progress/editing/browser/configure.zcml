@@ -1,6 +1,7 @@
 <configure
   xmlns="http://namespaces.zope.org/zope"
   xmlns:browser="http://namespaces.zope.org/browser"
+  xmlns:zcml="http://namespaces.zope.org/zcml"
   i18n_domain="eea">
 
   <browser:page
@@ -11,5 +12,19 @@
     permission="zope2.View"
     allowed_attributes="state_is_ready"
   />
+
+  <browser:page
+      zcml:condition="have plone-60"
+      name="editingprogress-controlpanel"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".controlpanel.EditingProgressControlPanelFormWrapper"
+      permission="cmf.ManagePortal"
+      layer="eea.progress.editing.interfaces.IEEAEditingProgressLayer"
+      />
+
+  <adapter
+      zcml:condition="have plone-60"
+      factory="eea.progress.editing.browser.controlpanel.EditingProgressRegistryConfigletPanel"
+      name="editingprogress-controlpanel" />
 
 </configure>

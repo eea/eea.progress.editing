@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.5 - (2023-06-01)
+---------------------------
+* Feature: Plone 6 added editing progress controlpanel 
+  [Petchesi-Iulian - refs #151690]
+
 1.4 - (2021-12-16)
 ---------------------------
 * Change: Fix package classifiers and python_requires
