@@ -10,7 +10,7 @@ except ImportError:
     from zope.schema import Dict as JSONField
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 from zope.interface import Interface
-
+from eea.progress.editing import EEAMessageFactory as _
 
 class IBaseObject(Interface):
     """ Marker interface for Archetypes or Dexterity objects
@@ -35,8 +35,8 @@ class IEditingProgressSettings(Interface):
     """ Editing progress schema """
 
     progress = JSONField(
-        title="Progress",
-        description="Editing progress configuration",
+        title=_(u"Progress"),
+        description=_(u"Editing progress configuration"),
         required=False,
         default={},
         missing_value={},
