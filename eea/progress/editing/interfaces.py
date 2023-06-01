@@ -12,6 +12,7 @@ from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 from zope.interface import Interface
 from eea.progress.editing import EEAMessageFactory as _
 
+
 class IBaseObject(Interface):
     """ Marker interface for Archetypes or Dexterity objects
     """
