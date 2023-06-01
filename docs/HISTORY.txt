@@ -1,6 +1,9 @@
 Changelog
 =========
 
+1.6-dev0 - (unreleased)
+---------------------------
+
 1.5 - (2023-06-01)
 ---------------------------
 * Feature: Plone 6 added editing progress controlpanel 
