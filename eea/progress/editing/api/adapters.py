@@ -100,6 +100,8 @@ class EditingProgress(object):
         return self._steps
 
     def get(self, record, name, default=''):
+        """ Get record property
+        """
         value = record.get(name, default)
         if isinstance(value, str):
             prefix = record.get('prefix')
