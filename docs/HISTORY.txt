@@ -1,6 +1,13 @@
 Changelog
 =========
 
+2.0 - (2024-06-01)
+---------------------------
+* Breaking: Drop Plone 4 GenericSetup profile
+  [avoinea - refs #151690]
+* Breaking: Rename Editing Progress ControlPanel and registry
+  [avoinea - refs #151690]
+
 1.5 - (2023-06-01)
 ---------------------------
 * Feature: Plone 6 added editing progress controlpanel 

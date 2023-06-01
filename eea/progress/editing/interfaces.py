@@ -4,9 +4,13 @@
     >>> sandbox = portal._getOb('sandbox')
 
 """
-
+try:
+    from plone.schema import JSONField
+except ImportError:
+    from zope.schema import Dict as JSONField
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
 from zope.interface import Interface
+from eea.progress.editing import EEAMessageFactory as _
 
 
 class IBaseObject(Interface):
@@ -28,6 +32,13 @@ class IEditingProgressState(Interface):
     """
 
 
-#
-# Adapters
-#
+class IEditingProgressSettings(Interface):
+    """ Editing progress schema """
+
+    progress = JSONField(
+        title=_(u"Progress"),
+        description=_(u"Editing progress configuration"),
+        required=False,
+        default={},
+        missing_value={},
+    )

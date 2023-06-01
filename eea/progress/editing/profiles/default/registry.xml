@@ -4,7 +4,7 @@
     i18n:domain="eea">
 
   <records
-      interface="eea.progress.editing.browser.controlpanel.IEditingProgressSettings"
+      interface="eea.progress.editing.interfaces.IEditingProgressSettings"
       prefix="editing" />
 
 </registry>
