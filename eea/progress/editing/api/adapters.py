@@ -1,7 +1,17 @@
+# pylint: disable = C0412
 """ Progress adapters
 """
-from zope.interface import implementer
+from logging import getLogger
+from plone.api import portal
+
+from Acquisition import ImplicitAcquisitionWrapper
 from eea.progress.editing.interfaces import IEditingProgress
+from plone.restapi.services.sources.get import get_field_by_name
+from zope.interface import implementer
+from zope.pagetemplate.engine import TrustedEngine, TrustedZopeContext
+
+
+logger = getLogger("eea.progress.editing")
 
 
 @implementer(IEditingProgress)
@@ -38,6 +48,7 @@ class EditingProgress(object):
         self._steps = []
         mview = self.context.restrictedTraverse('@@progress.metadata', None)
         if mview:
+            # Plone 4
             widgets_views = list(mview.schema())
             for wview in widgets_views:
                 is_ready = True if wview.ready() else False
@@ -59,8 +70,79 @@ class EditingProgress(object):
             # progress.metadata browserview otherwise we get the 100 fallback
             # as such we set the done value here instead of within the property
             self._done = mview.progress
+        else:
+            # Plone 6
+            registry_record = portal.get_registry_record('editing.progress')
+            ptype = self.context.portal_type
+            ptype_record = registry_record.get(ptype, [])
 
+            for record in ptype_record:
+                is_ready = True if self.condition(record) else False
+                field_dict = {'is_ready': is_ready,
+                              'states': self.get(record, 'states')}
+
+                if is_ready:
+                    field_dict['label'] = self.get(record, 'labelReady')
+                    field_dict['icon'] = self.get(record, 'iconReady')
+                    field_dict['link'] = ''
+                    field_dict['link_label'] = ''
+                else:
+                    field_dict['label'] = self.get(record, 'labelEmpty')
+                    field_dict['icon'] = self.get(record, 'iconEmpty')
+                    field_dict['link'] = "%s/%s" % (
+                        self.context.absolute_url(),
+                        self.get(record, 'link')
+                    )
+                    field_dict['link_label'] = self.get(record, 'linkLabel')
+
+                self._steps.append(field_dict)
+                # custom method for done/progress
         return self._steps
+
+    def get(self, record, name, default=''):
+        """ Get record property
+        """
+        value = record.get(name, default)
+        if isinstance(value, str):
+            prefix = record.get('prefix')
+            field = get_field_by_name(prefix, self.context)
+            label = getattr(field, 'title', prefix)
+            widget = getattr(field, 'widget', None)
+            value = value.format(
+                label=label,
+                field=field,
+                context=self.context,
+                widget=widget
+            )
+        return value
+
+    def condition(self, record):
+        """ condition custom method """
+        context = self.context
+        condition = record.get('condition')
+        field = get_field_by_name(record.get('prefix'), context)
+        value = (field.get(context) if field else getattr(context,
+                 record.get('prefix'), None))  # noqa
+        engine = TrustedEngine
+        zopeContext = TrustedZopeContext(engine, {
+            'context': context,
+            'request': self.context.REQUEST,
+            'field': field,
+            'value': value
+        })
+
+        try:
+            expression = engine.compile(condition)
+            result = zopeContext.evaluate(expression)
+        except Exception as err:
+            logger.exception(err)
+            result = False
+
+        if callable(result) and not isinstance(result,
+            ImplicitAcquisitionWrapper):  # noqa
+            result = result()
+
+        return result
 
     @property
     def done(self):

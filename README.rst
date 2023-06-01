@@ -28,49 +28,77 @@ Main features
 Install
 =======
 
-* Add eea.progress.editing to your eggs section in your buildout and
+* Add **eea.progress.editing** to your requirements.txt and **constraints.txt** and run::
+
+    pip install -r requirements.txt -c constraints.txt
+
+* Or, if using buildout, add **eea.progress.editing** to your eggs section in your buildout and
   re-run buildout::
 
     [buildout]
     eggs +=
       eea.progress.editing
 
-* You can download a sample buildout from:
-
-  - https://github.com/eea/eea.progress.editing/tree/master/buildouts/plone4
-  - https://github.com/eea/eea.progress.editing/tree/master/buildouts/plone5
-
 * Or via docker::
 
-    $ docker run --rm -p 8080:8080 -e ADDONS="eea.progress.editing" plone
+    $ docker run --rm -p 8080:8080 -e ADDONS="eea.progress.editing" plone/plone-backend
 
-* Install *eea.progress.editing* within Site Setup > Add-ons
+* Restart Plone
 
+* Install **eea.progress.editing** within **Site Setup > Add-ons**
 
-Buildout installation
-=====================
+* Configure editing progress via **Control Panel > Editing Progress Settings**
 
-- `Plone 4+ <https://github.com/eea/eea.progress.editing/tree/master/buildouts/plone4>`_
-- `Plone 5+ <https://github.com/eea/eea.progress.editing/tree/master/buildouts/plone5>`_
+* If you already have **Plone 4** definitions for your Content Types Editing Progress, you can
+  export them to XML at **/portal_progress/document/view.export** and then use
+  `xml2dict.py <https://github.com/eea/eea.progress.editing/blob/develop/xml2dict.py>`_ script to
+  convert them to **Plone 6** registry. The output should look like::
 
+      {
+        "Document": [
+          {
+            'condition': 'python:value',
+            'hideReady': 'False',
+            'iconEmpty': 'eea-icon eea-icon-edit',
+            'iconReady': 'eea-icon eea-icon-check',
+            'labelEmpty': 'Please set the {label} of this {context.portal_type}',
+            'labelReady': 'You added the {label}',
+            'link': 'edit#fieldsetlegend-default',
+            'linkLabel': 'Add {label}',
+            'prefix': 'title',
+            'states': ['all']
+          },
+                    {
+            'condition': 'python:value',
+            'hideReady': 'False',
+            'iconEmpty': 'eea-icon eea-icon-edit',
+            'iconReady': 'eea-icon eea-icon-check',
+            'labelEmpty': 'Please set the {label} of this {context.portal_type}',
+            'labelReady': 'You added the {label}',
+            'link': 'edit#fieldsetlegend-default',
+            'linkLabel': 'Add {label}',
+            'prefix': 'description',
+            'states': ['all']
+          },
+          ...
+        ]
+      }
 
 Source code
 ===========
 
-- `Plone 4+ on github <https://github.com/eea/eea.progress.editing>`_
-- `Plone 5+ on github <https://github.com/eea/eea.progress.editing>`_
-
+- `github.com/eea/eea.progress.editing <https://github.com/eea/eea.progress.editing>`_
 
 Eggs repository
 ===============
 
-- https://pypi.python.org/pypi/eea.progress.editing
-- http://eggrepo.eea.europa.eu/simple
+- `pypi.python.org/pypi/eea.progress.editing <https://pypi.python.org/pypi/eea.progress.editing>`_
+- `eggrepo.eea.europa.eu/d/eea.progress.editing <https://eggrepo.eea.europa.eu/d/eea.progress.editing>`_
 
 
 Plone versions
 ==============
-It has been developed and tested for Plone 4 and 5. See buildouts section above.
+It has been developed and tested for Plone 4, 5 and 6.
 
 
 How to contribute
