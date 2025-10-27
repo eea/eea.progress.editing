@@ -1,4 +1,3 @@
-# pylint: disable = C0412
 """ Progress adapters
 """
 from logging import getLogger
