@@ -1,5 +1,5 @@
-""" Editing progress controlpanel Plone 6
-"""
+"""Editing progress controlpanel Plone 6"""
+
 import logging
 
 from plone.app.registry.browser.controlpanel import ControlPanelFormWrapper
@@ -10,12 +10,14 @@ logger = logging.getLogger("eea.progress.editing")
 
 
 class EditingProgressRegistryEditForm(RegistryEditForm):
-    """ Editing progress form """
+    """Editing progress form"""
+
     schema = IEditingProgressSettings
     schema_prefix = "editing"
     label = "Editing progress"
 
 
 class EditingProgressControlPanelFormWrapper(ControlPanelFormWrapper):
-    """ Editing progress wrapper """
+    """Editing progress wrapper"""
+
     form = EditingProgressRegistryEditForm
