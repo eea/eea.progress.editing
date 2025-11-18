@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-""" Usage: xml2dict input-file.xml """
+"""Usage: xml2dict input-file.xml"""
+
 import sys
 from pprint import pprint
 import xml.etree.ElementTree as E

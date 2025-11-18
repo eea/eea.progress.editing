@@ -1,5 +1,5 @@
-""" eea.progress.editing Installer
-"""
+"""eea.progress.editing Installer"""
+
 import os
 from os.path import join
 from setuptools import setup, find_packages
@@ -14,9 +14,9 @@ setup(
     description="Editing progress RestAPI",
     long_description_content_type="text/x-rst",
     long_description=(
-        open("README.rst").read() +
-        "\n" +
-        open(os.path.join("docs", "HISTORY.txt")).read()
+        open("README.rst").read()
+        + "\n"
+        + open(os.path.join("docs", "HISTORY.txt")).read()
     ),
     classifiers=[
         "Environment :: Web Environment",
