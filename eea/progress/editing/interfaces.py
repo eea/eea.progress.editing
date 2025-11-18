@@ -1,9 +1,10 @@
-""" Module where all interfaces, events and exceptions live.
+"""Module where all interfaces, events and exceptions live.
 
-    >>> portal = layer['portal']
-    >>> sandbox = portal._getOb('sandbox')
+>>> portal = layer['portal']
+>>> sandbox = portal._getOb('sandbox')
 
 """
+
 try:
     from plone.schema import JSONField
 except ImportError:
@@ -14,8 +15,7 @@ from eea.progress.editing import EEAMessageFactory as _
 
 
 class IBaseObject(Interface):
-    """ Marker interface for Archetypes or Dexterity objects
-    """
+    """Marker interface for Archetypes or Dexterity objects"""
 
 
 class IEEAEditingProgressLayer(IDefaultBrowserLayer):
@@ -23,21 +23,19 @@ class IEEAEditingProgressLayer(IDefaultBrowserLayer):
 
 
 class IEditingProgress(Interface):
-    """ Marker interface for editing
-    """
+    """Marker interface for editing"""
 
 
 class IEditingProgressState(Interface):
-    """ Marker interface for editing state
-    """
+    """Marker interface for editing state"""
 
 
 class IEditingProgressSettings(Interface):
-    """ Editing progress schema """
+    """Editing progress schema"""
 
     progress = JSONField(
-        title=_(u"Progress"),
-        description=_(u"Editing progress configuration"),
+        title=_("Progress"),
+        description=_("Editing progress configuration"),
         required=False,
         default={},
         missing_value={},

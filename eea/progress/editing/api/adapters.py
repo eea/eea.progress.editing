@@ -1,6 +1,5 @@
-# pylint: disable = C0412
-""" Progress adapters
-"""
+"""Progress adapters"""
+
 from logging import getLogger
 from plone.api import portal
 
@@ -46,24 +45,23 @@ class EditingProgress(object):
             return self._steps
 
         self._steps = []
-        mview = self.context.restrictedTraverse('@@progress.metadata', None)
+        mview = self.context.restrictedTraverse("@@progress.metadata", None)
         if mview:
             # Plone 4
             widgets_views = list(mview.schema())
             for wview in widgets_views:
                 is_ready = True if wview.ready() else False
-                field_dict = {'is_ready': is_ready,
-                              'states': wview.get('states')}
+                field_dict = {"is_ready": is_ready, "states": wview.get("states")}
                 if is_ready:
-                    field_dict['label'] = wview.get('labelReady')
-                    field_dict['icon'] = wview.get('iconReady')
-                    field_dict['link'] = ''
-                    field_dict['link_label'] = ''
+                    field_dict["label"] = wview.get("labelReady")
+                    field_dict["icon"] = wview.get("iconReady")
+                    field_dict["link"] = ""
+                    field_dict["link_label"] = ""
                 else:
-                    field_dict['label'] = wview.get('labelEmpty')
-                    field_dict['icon'] = wview.get('iconEmpty')
-                    field_dict['link'] = wview.ctx_url + wview.get('link')
-                    field_dict['link_label'] = wview.get('linkLabel')
+                    field_dict["label"] = wview.get("labelEmpty")
+                    field_dict["icon"] = wview.get("iconEmpty")
+                    field_dict["link"] = wview.ctx_url + wview.get("link")
+                    field_dict["link_label"] = wview.get("linkLabel")
                 self._steps.append(field_dict)
             # progressbar/browser/app/view.py#L155
             # progress is set correctly only after call to schema() from
@@ -72,64 +70,68 @@ class EditingProgress(object):
             self._done = mview.progress
         else:
             # Plone 6
-            registry_record = portal.get_registry_record('editing.progress')
+            registry_record = portal.get_registry_record("editing.progress")
             ptype = self.context.portal_type
             ptype_record = registry_record.get(ptype, [])
 
             for record in ptype_record:
                 is_ready = True if self.condition(record) else False
-                field_dict = {'is_ready': is_ready,
-                              'states': self.get(record, 'states')}
+                field_dict = {
+                    "is_ready": is_ready,
+                    "states": self.get(record, "states"),
+                }
 
                 if is_ready:
-                    field_dict['label'] = self.get(record, 'labelReady')
-                    field_dict['icon'] = self.get(record, 'iconReady')
-                    field_dict['link'] = ''
-                    field_dict['link_label'] = ''
+                    field_dict["label"] = self.get(record, "labelReady")
+                    field_dict["icon"] = self.get(record, "iconReady")
+                    field_dict["link"] = ""
+                    field_dict["link_label"] = ""
                 else:
-                    field_dict['label'] = self.get(record, 'labelEmpty')
-                    field_dict['icon'] = self.get(record, 'iconEmpty')
-                    field_dict['link'] = "%s/%s" % (
+                    field_dict["label"] = self.get(record, "labelEmpty")
+                    field_dict["icon"] = self.get(record, "iconEmpty")
+                    field_dict["link"] = "%s/%s" % (
                         self.context.absolute_url(),
-                        self.get(record, 'link')
+                        self.get(record, "link"),
                     )
-                    field_dict['link_label'] = self.get(record, 'linkLabel')
+                    field_dict["link_label"] = self.get(record, "linkLabel")
 
                 self._steps.append(field_dict)
                 # custom method for done/progress
         return self._steps
 
-    def get(self, record, name, default=''):
-        """ Get record property
-        """
+    def get(self, record, name, default=""):
+        """Get record property"""
         value = record.get(name, default)
         if isinstance(value, str):
-            prefix = record.get('prefix')
+            prefix = record.get("prefix")
             field = get_field_by_name(prefix, self.context)
-            label = getattr(field, 'title', prefix)
-            widget = getattr(field, 'widget', None)
+            label = getattr(field, "title", prefix)
+            widget = getattr(field, "widget", None)
             value = value.format(
-                label=label,
-                field=field,
-                context=self.context,
-                widget=widget
+                label=label, field=field, context=self.context, widget=widget
             )
         return value
 
     def condition(self, record):
-        """ condition custom method """
+        """condition custom method"""
         context = self.context
-        condition = record.get('condition')
-        field = get_field_by_name(record.get('prefix'), context)
-        value = (field.get(context) if field else getattr(context,
-                 record.get('prefix'), None))  # noqa
+        condition = record.get("condition")
+        field = get_field_by_name(record.get("prefix"), context)
+        value = (
+            field.get(context)
+            if field
+            else getattr(context, record.get("prefix"), None)
+        )  # noqa
         engine = TrustedEngine
-        zopeContext = TrustedZopeContext(engine, {
-            'context': context,
-            'request': self.context.REQUEST,
-            'field': field,
-            'value': value
-        })
+        zopeContext = TrustedZopeContext(
+            engine,
+            {
+                "context": context,
+                "request": self.context.REQUEST,
+                "field": field,
+                "value": value,
+            },
+        )
 
         try:
             expression = engine.compile(condition)
@@ -138,8 +140,7 @@ class EditingProgress(object):
             logger.exception(err)
             result = False
 
-        if callable(result) and not isinstance(result,
-            ImplicitAcquisitionWrapper):  # noqa
+        if callable(result) and not isinstance(result, ImplicitAcquisitionWrapper):  # noqa
             result = result()
 
         return result

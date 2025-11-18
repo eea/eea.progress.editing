@@ -1,4 +1,5 @@
-""" Variables
-"""
+"""Variables"""
+
 from zope.i18nmessageid.message import MessageFactory
-EEAMessageFactory = MessageFactory('eea')
+
+EEAMessageFactory = MessageFactory("eea")
