@@ -185,9 +185,7 @@ class EditingProgress(object):
                 step["link"] = ""
                 step["link_label"] = ""
             else:
-                step["label"] = (
-                    f"{title} exceeds limit ({current}/{max_chars})"
-                )
+                step["label"] = f"{title} exceeds limit ({current}/{max_chars})"
                 step["icon"] = "eea-icon eea-icon-warning"
                 step["link"] = f"{self.context.absolute_url()}/edit"
                 step["link_label"] = link_label_template.replace("{title}", title)
