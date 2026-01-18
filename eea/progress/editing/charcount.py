@@ -150,6 +150,7 @@ def validate_all_char_limits(context):
 
         results.append(
             {
+                "block_id": item["block_id"],
                 "title": item["title"],
                 "current_count": current_count,
                 "max_chars": max_chars,
