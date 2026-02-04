@@ -107,39 +107,6 @@ def count_chars_in_group_block(group_block, ignore_spaces=True, countable_types=
     return total
 
 
-def get_default_over_percent(title, max_chars):
-    """Get default maxCharsOverPercent based on section title or maxChars
-
-    Fallback for existing indicators without maxCharsOverPercent field.
-
-    Args:
-        title: Block title
-        max_chars: Maximum characters limit
-
-    Returns:
-        int: Default over percent (0, 10, or 20)
-    """
-    title_lower = (title or "").lower()
-
-    # Match by title
-    if "aggregate" in title_lower and "disaggregate" not in title_lower:
-        return 20  # Aggregate level assessment: 20% over
-    elif "disaggregate" in title_lower:
-        return 10  # Disaggregate level assessment: 10% over
-    elif "header" in title_lower or "summary" in title_lower:
-        return 0  # Content header/Summary: strict limit
-
-    # Fallback by maxChars value
-    if max_chars == 2000:
-        return 20  # Aggregate
-    elif max_chars == 1000:
-        return 10  # Disaggregate
-    elif max_chars == 500:
-        return 0  # Summary
-
-    return 0  # Default: no over percent
-
-
 def get_blocks_with_char_limits(blocks):
     """Find all group blocks that have maxChars defined
 
@@ -155,11 +122,7 @@ def get_blocks_with_char_limits(blocks):
             max_chars = int(block.get("maxChars", 0))
             title = block.get("title", block_id)
 
-            # Use maxCharsOverPercent if present, otherwise use fallback
-            if "maxCharsOverPercent" in block:
-                over_percent = int(block.get("maxCharsOverPercent", 0))
-            else:
-                over_percent = get_default_over_percent(title, max_chars)
+            over_percent = int(block.get("maxCharsOverPercent", 0))
 
             results.append(
                 {
