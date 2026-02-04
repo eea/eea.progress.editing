@@ -21,28 +21,33 @@ def count_chars_with_spaces(text):
 def extract_text_from_slate_value(value):
     """Extract plain text from slate value array
 
-    Mirrors frontend serializeNodesToText() from volto-slate.
+    Mirrors frontend serializeNodesToText() from volto-slate exactly.
     Slate value is structured like:
     [{"type": "p", "children": [{"text": "Hello"}, {"text": " world"}]}]
+
+    Frontend logic:
+    - Text nodes are trimmed
+    - Children are joined with space ' '
+    - Top-level nodes are joined with newline '\\n'
     """
     if not value or not isinstance(value, list):
         return ""
 
-    texts = []
-
-    def traverse(node):
+    def concatenated_string(node):
+        """Mirrors frontend ConcatenatedString function"""
         if isinstance(node, dict):
+            # Text node - return trimmed text
             if "text" in node:
-                texts.append(node["text"])
+                return node["text"].strip()
+            # Element node - join children with space
             if "children" in node:
-                for child in node["children"]:
-                    traverse(child)
-        elif isinstance(node, list):
-            for item in node:
-                traverse(item)
+                return " ".join(
+                    concatenated_string(child) for child in node["children"]
+                )
+        return ""
 
-    traverse(value)
-    return "".join(texts)
+    # Join top-level nodes with newline (like frontend)
+    return "\n".join(concatenated_string(node) for node in value)
 
 
 def count_chars_in_block(block, ignore_spaces=True, countable_types=None):
@@ -102,6 +107,39 @@ def count_chars_in_group_block(group_block, ignore_spaces=True, countable_types=
     return total
 
 
+def get_default_over_percent(title, max_chars):
+    """Get default maxCharsOverPercent based on section title or maxChars
+
+    Fallback for existing indicators without maxCharsOverPercent field.
+
+    Args:
+        title: Block title
+        max_chars: Maximum characters limit
+
+    Returns:
+        int: Default over percent (0, 10, or 20)
+    """
+    title_lower = (title or "").lower()
+
+    # Match by title
+    if "aggregate" in title_lower and "disaggregate" not in title_lower:
+        return 20  # Aggregate level assessment: 20% over
+    elif "disaggregate" in title_lower:
+        return 10  # Disaggregate level assessment: 10% over
+    elif "header" in title_lower or "summary" in title_lower:
+        return 0  # Content header/Summary: strict limit
+
+    # Fallback by maxChars value
+    if max_chars == 2000:
+        return 20  # Aggregate
+    elif max_chars == 1000:
+        return 10  # Disaggregate
+    elif max_chars == 500:
+        return 0  # Summary
+
+    return 0  # Default: no over percent
+
+
 def get_blocks_with_char_limits(blocks):
     """Find all group blocks that have maxChars defined
 
@@ -109,16 +147,26 @@ def get_blocks_with_char_limits(blocks):
         blocks: Dict of blocks from content
 
     Returns:
-        list: List of dicts with block info including maxChars
+        list: List of dicts with block info including maxChars and maxCharsOverPercent
     """
     results = []
     for block_id, block in (blocks or {}).items():
         if block.get("@type") == "group" and block.get("maxChars"):
+            max_chars = int(block.get("maxChars", 0))
+            title = block.get("title", block_id)
+
+            # Use maxCharsOverPercent if present, otherwise use fallback
+            if "maxCharsOverPercent" in block:
+                over_percent = int(block.get("maxCharsOverPercent", 0))
+            else:
+                over_percent = get_default_over_percent(title, max_chars)
+
             results.append(
                 {
                     "block_id": block_id,
-                    "title": block.get("title", block_id),
-                    "maxChars": int(block.get("maxChars", 0)),
+                    "title": title,
+                    "maxChars": max_chars,
+                    "maxCharsOverPercent": over_percent,
                     "ignoreSpaces": block.get("ignoreSpaces", True),
                     "block": block,
                 }
@@ -130,7 +178,7 @@ def validate_all_char_limits(context):
     """Validate all blocks with maxChars in content
 
     Finds all group blocks with maxChars defined and validates
-    that their character count is within the limit.
+    that their character count is within the limit (including cap percentage).
 
     Args:
         context: Plone content object with blocks attribute
@@ -146,7 +194,12 @@ def validate_all_char_limits(context):
         ignore_spaces = item.get("ignoreSpaces", True)
         current_count = count_chars_in_group_block(item["block"], ignore_spaces)
         max_chars = item["maxChars"]
-        is_valid = current_count <= max_chars
+        over_percent = item.get("maxCharsOverPercent", 0)
+
+        # Calculate effective max with cap percentage
+        # e.g., maxChars=2000, maxCharsOverPercent=20 -> effective_max=2400
+        effective_max = int(max_chars * (1 + over_percent / 100))
+        is_valid = current_count <= effective_max
 
         results.append(
             {
@@ -154,6 +207,7 @@ def validate_all_char_limits(context):
                 "title": item["title"],
                 "current_count": current_count,
                 "max_chars": max_chars,
+                "effective_max": effective_max,
                 "is_valid": is_valid,
             }
         )
