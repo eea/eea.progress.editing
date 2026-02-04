@@ -121,7 +121,6 @@ def get_blocks_with_char_limits(blocks):
         if block.get("@type") == "group" and block.get("maxChars"):
             max_chars = int(block.get("maxChars", 0))
             title = block.get("title", block_id)
-
             over_percent = int(block.get("maxCharsOverPercent", 0))
 
             results.append(
@@ -149,7 +148,27 @@ def validate_all_char_limits(context):
     Returns:
         list: List of validation results with is_valid, title, counts
     """
-    blocks = getattr(context, "blocks", {}) or {}
+    # Get serialized blocks (with layout properties merged)
+    from plone.restapi.interfaces import IFieldSerializer
+    from zope.component import queryMultiAdapter
+    from plone.dexterity.utils import iterSchemata
+
+    blocks = None
+    for schema in iterSchemata(context):
+        if hasattr(schema, "get") and "blocks" in schema:
+            field = schema.get("blocks")
+            if field:
+                serializer = queryMultiAdapter(
+                    (field, context, context.REQUEST), IFieldSerializer
+                )
+                if serializer:
+                    blocks = serializer()
+                    break
+
+    # Fallback to raw blocks if serializer not available
+    if blocks is None:
+        blocks = getattr(context, "blocks", {}) or {}
+
     blocks_with_limits = get_blocks_with_char_limits(blocks)
 
     results = []
