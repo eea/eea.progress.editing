@@ -1,12 +1,17 @@
 Changelog
 =========
 
+3.0 - (2026-02-10)
+---------------------------
+* Feature: Add support to enforce character limits in Section (Group) blocks
+  [dobri1408 - refs #294806]
+
 2.1 - (2025-11-18)
 ---------------------------
 * Change: Replace Python linting to ruff
-  [mihaidobrescu1111 = refs #286821]
+  [mihaidobrescu1111 - refs #286821]
 * Change: Add plone6 tests
-  [mihaidobrescu1111 = refs #293593]
+  [mihaidobrescu1111 - refs #293593]
 
 2.0 - (2024-06-01)
 ---------------------------
@@ -17,7 +22,7 @@ Changelog
 
 1.5 - (2023-06-01)
 ---------------------------
-* Feature: Plone 6 added editing progress controlpanel 
+* Feature: Plone 6 added editing progress controlpanel
   [Petchesi-Iulian - refs #151690]
 
 1.4 - (2021-12-16)
@@ -30,7 +35,7 @@ Changelog
 * Feature: Introduced @@editing.progress.status browser view used to check if
   every field is entered for current state, useful for workflow guards
   [ichim-david refs #124587]
-  
+
 1.2 - (2021-06-10)
 ---------------------------
 * Change: add also workflow states info to rest api, this

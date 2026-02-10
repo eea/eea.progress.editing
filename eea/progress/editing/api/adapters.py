@@ -5,6 +5,7 @@ from plone.api import portal
 
 from Acquisition import ImplicitAcquisitionWrapper
 from eea.progress.editing.interfaces import IEditingProgress
+from eea.progress.editing.utils import validate_all_char_limits
 from plone.restapi.services.sources.get import get_field_by_name
 from zope.interface import implementer
 from zope.pagetemplate.engine import TrustedEngine, TrustedZopeContext
@@ -75,6 +76,12 @@ class EditingProgress(object):
             ptype_record = registry_record.get(ptype, [])
 
             for record in ptype_record:
+                # Handle enforceCharLimits type for block character validation
+                if record.get("type") == "enforceCharLimits":
+                    char_limit_steps = self.get_char_limit_steps(record)
+                    self._steps.extend(char_limit_steps)
+                    continue
+
                 is_ready = True if self.condition(record) else False
                 field_dict = {
                     "is_ready": is_ready,
@@ -144,6 +151,48 @@ class EditingProgress(object):
             result = result()
 
         return result
+
+    def get_char_limit_steps(self, record):
+        """Get steps for all blocks with character limits
+
+        Validates all group blocks that have maxChars defined and returns
+        steps for each one indicating whether they are within the limit.
+
+        Args:
+            record: The enforceCharLimits configuration record
+
+        Returns:
+            list: List of step dicts for each block with char limits
+        """
+        validations = validate_all_char_limits(self.context)
+        states = record.get("states", ["all"])
+        link_label_template = record.get("linkLabel", "Fix {title}")
+
+        steps = []
+        for validation in validations:
+            step = {
+                "is_ready": validation["is_valid"],
+                "states": states,
+            }
+
+            title = validation["title"]
+            current = validation["current_count"]
+            max_chars = validation["max_chars"]
+
+            if validation["is_valid"]:
+                step["label"] = f"{title}: {current}/{max_chars} characters"
+                step["icon"] = "eea-icon eea-icon-check"
+                step["link"] = ""
+                step["link_label"] = ""
+            else:
+                step["label"] = f"{title} exceeds limit ({current}/{max_chars})"
+                step["icon"] = "eea-icon eea-icon-warning"
+                step["link"] = f"{self.context.absolute_url()}/edit"
+                step["link_label"] = link_label_template.replace("{title}", title)
+
+            steps.append(step)
+
+        return steps
 
     @property
     def done(self):
