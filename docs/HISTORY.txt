@@ -1,6 +1,9 @@
 Changelog
 =========
 
+3.1-dev0 - (unreleased)
+---------------------------
+
 3.0 - (2026-02-10)
 ---------------------------
 * Feature: Add support to enforce character limits in Section (Group) blocks
