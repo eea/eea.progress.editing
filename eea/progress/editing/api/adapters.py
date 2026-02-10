@@ -5,7 +5,7 @@ from plone.api import portal
 
 from Acquisition import ImplicitAcquisitionWrapper
 from eea.progress.editing.interfaces import IEditingProgress
-from eea.progress.editing.charcount import validate_all_char_limits
+from eea.progress.editing.utils import validate_all_char_limits
 from plone.restapi.services.sources.get import get_field_by_name
 from zope.interface import implementer
 from zope.pagetemplate.engine import TrustedEngine, TrustedZopeContext
