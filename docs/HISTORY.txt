@@ -1,6 +1,11 @@
 Changelog
 =========
 
+3.1 - (2026-04-14)
+---------------------------
+* Change: Add integration tests for @editing.progress REST API views
+  [avoinea]
+
 3.0 - (2026-02-10)
 ---------------------------
 * Feature: Add support to enforce character limits in Section (Group) blocks
