@@ -22,6 +22,7 @@ class TestEditingProgressSetup(unittest.TestCase):
     def test_product_installed(self):
         """Test that eea.progress.editing is installed"""
         from Products.CMFPlone.utils import get_installer
+
         installer = get_installer(self.portal, self.layer["request"])
         self.assertTrue(installer.is_product_installed("eea.progress.editing"))
 
@@ -42,11 +43,13 @@ class TestEditingProgressView(unittest.TestCase):
     def test_editing_progress_adapter_registered(self):
         """Test that EditingProgress adapter class exists"""
         from eea.progress.editing.restapi.get import EditingProgress
+
         self.assertIsNotNone(EditingProgress)
 
     def test_editing_progress_on_site_root(self):
         """Test EditingProgress on site root returns basic structure"""
         from eea.progress.editing.restapi.get import EditingProgress
+
         ep = EditingProgress(self.portal, self.portal.REQUEST)
         result = ep(expand=False)
         self.assertIn("editing.progress", result)
@@ -55,6 +58,7 @@ class TestEditingProgressView(unittest.TestCase):
     def test_editing_progress_get_class_exists(self):
         """Test that EditingProgressGet class exists"""
         from eea.progress.editing.restapi.get import EditingProgressGet
+
         self.assertIsNotNone(EditingProgressGet)
 
 
@@ -72,6 +76,7 @@ class TestEditingProgressOnDocument(unittest.TestCase):
     def test_editing_progress_on_document(self):
         """Test EditingProgress on a Document"""
         from eea.progress.editing.restapi.get import EditingProgress
+
         doc = self.portal["test-doc"]
         ep = EditingProgress(doc, self.portal.REQUEST)
         result = ep(expand=True)
@@ -80,6 +85,7 @@ class TestEditingProgressOnDocument(unittest.TestCase):
     def test_editing_progress_has_done_on_document(self):
         """Test that EditingProgress on Document has done field"""
         from eea.progress.editing.restapi.get import EditingProgress
+
         doc = self.portal["test-doc"]
         ep = EditingProgress(doc, self.portal.REQUEST)
         result = ep(expand=True)
